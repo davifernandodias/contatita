@@ -1,18 +1,23 @@
-"use client"
+'use client'
 
-import { usePhoneInput, FlagImage, defaultCountries, parseCountry } from "react-international-phone"
-import "react-international-phone/style.css"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
+import {
+  usePhoneInput,
+  FlagImage,
+  defaultCountries,
+  parseCountry
+} from 'react-international-phone'
+import 'react-international-phone/style.css'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 import {
   Popover,
   PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { ChevronDown } from "lucide-react"
-import { useState } from "react"
-import { cn } from "@/lib/utils"
+  PopoverTrigger
+} from '@/components/ui/popover'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { ChevronDown } from 'lucide-react'
+import { useState } from 'react'
+import { cn } from '@/lib/utils'
 
 interface PhoneInputFieldProps {
   value: string
@@ -23,18 +28,18 @@ interface PhoneInputFieldProps {
 export function PhoneInputField({
   value,
   onChange,
-  placeholder = "Telefone",
+  placeholder = 'Telefone'
 }: PhoneInputFieldProps) {
   const [open, setOpen] = useState(false)
 
   const { inputValue, handlePhoneValueChange, inputRef, country, setCountry } =
     usePhoneInput({
-      defaultCountry: "br",
+      defaultCountry: 'br',
       value,
       onChange: ({ phone }) => {
         onChange(phone)
       },
-      forceDialCode: true,
+      forceDialCode: true
     })
 
   return (
@@ -45,7 +50,7 @@ export function PhoneInputField({
             type="button"
             variant="outline"
             className={cn(
-              "flex items-center gap-1.5 rounded-r-none border-r-0 px-2.5"
+              'flex items-center gap-1.5 rounded-r-none border-r-0 px-2.5'
             )}
           >
             <FlagImage iso2={country.iso2} size="20px" />
@@ -66,8 +71,8 @@ export function PhoneInputField({
                       setOpen(false)
                     }}
                     className={cn(
-                      "flex items-center gap-3 px-3 py-2 text-sm transition-colors hover:bg-accent",
-                      country.iso2 === parsed.iso2 && "bg-accent"
+                      'flex items-center gap-3 px-3 py-2 text-sm transition-colors hover:bg-accent',
+                      country.iso2 === parsed.iso2 && 'bg-accent'
                     )}
                   >
                     <FlagImage iso2={parsed.iso2} size="20px" />

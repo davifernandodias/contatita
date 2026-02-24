@@ -1,4 +1,4 @@
 export interface ContactSearchParams {
-  nome?: string;
-  numero?: string;
+  nome?: string
+  numero?: string
 }

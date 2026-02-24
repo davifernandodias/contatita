@@ -1,7 +1,5 @@
-import { ContactPage } from "./pages/contact-page";
+import { ContactPage } from './pages/contact-page'
 
 export function App() {
-    return (
-        <ContactPage />
-    )
+  return <ContactPage />
 }

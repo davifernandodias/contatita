@@ -1,8 +1,8 @@
-import axios from "axios";
+import axios from 'axios'
 
 export const httpClient = axios.create({
-    timeout: 5000,
-    headers: {
-        'Content-Type': 'application/json'
-    }
+  timeout: 5000,
+  headers: {
+    'Content-Type': 'application/json'
+  }
 })

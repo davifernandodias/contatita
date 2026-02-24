@@ -1,3 +1,3 @@
 export interface Phone {
-  numero: string;
+  numero: string
 }
