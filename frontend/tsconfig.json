@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "strict": true,
+        "skipLibCheck": true,
+        "module": "es2022",
+        "target": "es2022",
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "noImplicitAny": true,
+        "noImplicitReturns": true,
+        "jsx": "react-jsx",
+        "paths": {
+            "@/*": ["./src/*"]
+        }
+    }
+}
