@@ -36,7 +36,6 @@ export function ContactPage() {
           </div>
 
           <div className="rounded-xl border border-border bg-card shadow-sm">
-            {/* Tab triggers */}
             <div className="relative flex border-b border-border">
               {tabs.map((tab) => {
                 const Icon = tab.icon
@@ -46,7 +45,7 @@ export function ContactPage() {
                     type="button"
                     onClick={() => setActiveTab(tab.id)}
                     className={cn(
-                      'relative z-10 flex flex-1 items-center justify-center gap-2 px-4 py-3.5 text-sm font-medium transition-colors',
+                      'relative z-10 flex flex-1 items-center justify-center gap-2 px-4 py-3.5 text-sm font-medium transition-colors cursor-pointer',
                       activeTab === tab.id
                         ? 'text-primary'
                         : 'text-muted-foreground hover:text-foreground'
@@ -59,8 +58,6 @@ export function ContactPage() {
                   </button>
                 )
               })}
-
-              {/* Animated underline indicator */}
               <motion.div
                 className="absolute bottom-0 h-0.5 bg-primary"
                 layoutId="tab-indicator"
@@ -71,8 +68,6 @@ export function ContactPage() {
                 transition={{ type: 'spring', stiffness: 400, damping: 30 }}
               />
             </div>
-
-            {/* Tab content with animation */}
             <div className="relative overflow-hidden p-6">
               <AnimatePresence mode="wait">
                 <motion.div

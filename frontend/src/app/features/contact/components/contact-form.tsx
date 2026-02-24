@@ -79,7 +79,7 @@ export function ContactForm() {
             variant="outline"
             size="sm"
             onClick={() => append({ numero: '' })}
-            className="gap-1.5"
+            className="gap-1.5 cursor-pointer"
           >
             <DiamondPlus className="size-4" />
             <span>Adicionar</span>
@@ -114,7 +114,7 @@ export function ContactForm() {
                     variant="ghost"
                     size="icon"
                     onClick={() => remove(index)}
-                    className="shrink-0 text-muted-foreground hover:text-destructive"
+                    className="shrink-0 text-muted-foreground hover:text-destructive cursor-pointer"
                   >
                     <Trash2 className="size-4" />
                     <span className="sr-only">
@@ -128,7 +128,7 @@ export function ContactForm() {
         </AnimatePresence>
       </div>
 
-      <Button type="submit" className="mt-2 w-full gap-2">
+      <Button type="submit" className="mt-2 w-full gap-2 cursor-pointer">
         <Save className="size-4" />
         Salvar Contato
       </Button>
