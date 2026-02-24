@@ -1,5 +1,3 @@
-'use client'
-
 import {
   usePhoneInput,
   FlagImage,
@@ -16,7 +14,7 @@ import {
 } from '@/components/ui/popover'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { ChevronDown } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { cn } from '@/lib/utils'
 
 interface PhoneInputFieldProps {
@@ -31,6 +29,11 @@ export function PhoneInputField({
   placeholder = 'Telefone'
 }: PhoneInputFieldProps) {
   const [open, setOpen] = useState(false)
+
+  const parsedCountries = useMemo(
+    () => defaultCountries.map((c) => parseCountry(c)),
+    []
+  )
 
   const { inputValue, handlePhoneValueChange, inputRef, country, setCountry } =
     usePhoneInput({
@@ -60,29 +63,26 @@ export function PhoneInputField({
         <PopoverContent className="w-70 p-0" align="start">
           <ScrollArea className="h-70">
             <div className="flex flex-col">
-              {defaultCountries.map((c) => {
-                const parsed = parseCountry(c)
-                return (
-                  <button
-                    key={parsed.iso2}
-                    type="button"
-                    onClick={() => {
-                      setCountry(parsed.iso2)
-                      setOpen(false)
-                    }}
-                    className={cn(
-                      'flex items-center gap-3 px-3 py-2 text-sm transition-colors hover:bg-accent',
-                      country.iso2 === parsed.iso2 && 'bg-accent'
-                    )}
-                  >
-                    <FlagImage iso2={parsed.iso2} size="20px" />
-                    <span className="flex-1 text-left">{parsed.name}</span>
-                    <span className="text-muted-foreground">
-                      +{parsed.dialCode}
-                    </span>
-                  </button>
-                )
-              })}
+              {parsedCountries.map((parsed) => (
+                <button
+                  key={parsed.iso2}
+                  type="button"
+                  onClick={() => {
+                    setCountry(parsed.iso2)
+                    setOpen(false)
+                  }}
+                  className={cn(
+                    'flex items-center gap-3 px-3 py-2 text-sm transition-colors hover:bg-accent',
+                    country.iso2 === parsed.iso2 && 'bg-accent'
+                  )}
+                >
+                  <FlagImage iso2={parsed.iso2} size="20px" />
+                  <span className="flex-1 text-left">{parsed.name}</span>
+                  <span className="text-muted-foreground">
+                    +{parsed.dialCode}
+                  </span>
+                </button>
+              ))}
             </div>
           </ScrollArea>
         </PopoverContent>

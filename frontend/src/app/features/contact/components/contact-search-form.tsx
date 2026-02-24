@@ -5,6 +5,7 @@ import { Search } from 'lucide-react'
 import { useForm, Controller } from 'react-hook-form'
 import { PhoneInputField } from '@/components/phone-input-field'
 import { ContactSearchParams } from '../types/contact-search-params'
+import { useDebouncedCallback } from 'use-debounce'
 
 export function ContactFormSearch() {
   const {
@@ -15,10 +16,17 @@ export function ContactFormSearch() {
     getValues,
     trigger
   } = useForm<ContactSearchParams>({
-    defaultValues: { nome: '', numero: '' }
+    defaultValues: { nome: '', numero: '' },
+    mode: 'onSubmit'
   })
 
-  const onSubmit = (data: ContactSearchParams) => {
+  const debouncedTriggerNumero = useDebouncedCallback(() => trigger('numero'), 300)
+  const debouncedTriggerNome = useDebouncedCallback(() => trigger('nome'), 300)
+
+  const onSubmit = async (data: ContactSearchParams) => {
+    const isValid = await trigger(['nome', 'numero'])
+    if (!isValid) return
+
     try {
       console.log('Dados do formulario:', data)
     } catch (error) {
@@ -43,7 +51,7 @@ export function ContactFormSearch() {
                 'Preencha ao menos um campo'
               )
             },
-            onChange: () => trigger('numero')
+            onChange: () => debouncedTriggerNumero()
           })}
           aria-invalid={errors.nome ? 'true' : 'false'}
         />
@@ -57,8 +65,8 @@ export function ContactFormSearch() {
           rules={{
             validate: (value) => {
               const nome = getValues('nome')
-              const numeroLimpo = (value ?? '').replace(/\D/g, '') // remove tudo que não é dígito
-              const numeroValido = numeroLimpo.length >= 10 // mínimo: DDI + DDD + número
+              const numeroLimpo = (value ?? '').replace(/\D/g, '')
+              const numeroValido = numeroLimpo.length >= 12
               const nomeValido = (nome ?? '').trim().length > 0
 
               return numeroValido || nomeValido || 'Preencha ao menos um campo'
@@ -69,7 +77,7 @@ export function ContactFormSearch() {
               value={field.value ?? ''}
               onChange={(val) => {
                 field.onChange(val)
-                trigger('nome')
+                debouncedTriggerNome()
               }}
               placeholder="Buscar por telefone"
             />
