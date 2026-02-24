@@ -19,7 +19,8 @@
         "dev": "vite dev",
         "build": "vite build",
         "preview": "vite preview",
-        "lint": "eslint . --cache"
+        "lint": "eslint . --cache",
+        "format": "prettier --write \"src/**/*.{ts,tsx}\""
     },
     "devDependencies": {
         "@tailwindcss/vite": "^4.2.1",
