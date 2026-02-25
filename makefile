@@ -22,3 +22,10 @@ stop:
 
 clean:
 	docker compose down -v
+    
+format-all:
+	@echo "Formatando backend..."
+	cd backend && npm run format
+	@echo "Formatando frontend..."
+	cd frontend && npm run format
+	@echo "Formatação concluída!"
