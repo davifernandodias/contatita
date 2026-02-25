@@ -74,6 +74,7 @@ export function ContactForm() {
         <Input
           id="name"
           type="text"
+          maxLength={100}
           placeholder="Digite o nome completo"
           {...register('name', {
             required: 'Nome é obrigatório',
