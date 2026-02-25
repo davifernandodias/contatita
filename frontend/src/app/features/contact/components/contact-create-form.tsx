@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { PhoneInputField } from '@/components/phone-input-field'
+import { contactService } from '../services/contact-service'
 
 export function ContactForm() {
   const {
@@ -22,12 +23,20 @@ export function ContactForm() {
     name: 'phone'
   })
 
-  const onSubmit = (data: ContactFormData) => {
-    try {
-      console.log('Dados do formulario:', data)
-    } catch (error) {
-      console.error('Erro ao salvar contato:', error)
+  const onSubmit = async (data: ContactFormData) => {
+    debugger
+    const response = await contactService.register({
+      name: data.name,
+      age: data.age,
+      phones: data.phone
+    })
+
+    // Verifica se não retornou um erro "esperado"
+    if (response && response.action_code !== 1) {
+      alert('Atenção. ocorreu um erro: ' + response.message)
     }
+
+    alert(response.message)
   }
 
   return (

@@ -20,7 +20,10 @@ export function ContactFormSearch() {
     mode: 'onSubmit'
   })
 
-  const debouncedTriggerNumero = useDebouncedCallback(() => trigger('numero'), 300)
+  const debouncedTriggerNumero = useDebouncedCallback(
+    () => trigger('numero'),
+    300
+  )
   const debouncedTriggerNome = useDebouncedCallback(() => trigger('nome'), 300)
 
   const onSubmit = async (data: ContactSearchParams) => {

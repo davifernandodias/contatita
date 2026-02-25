@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { UserPlus, Search } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { ContactForm } from '@/app/features/contact/components/contact-form'
+import { ContactForm } from '@/app/features/contact/components/contact-create-form'
 import { ContactFormSearch } from '@/app/features/contact/components/contact-search-form'
 
 const tabs = [
