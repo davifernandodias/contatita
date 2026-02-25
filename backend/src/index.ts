@@ -11,7 +11,7 @@ const app = express()
 
 app.use(
   cors({
-    origin: `${urlFront}`,
+    origin: urlFront,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
   })
@@ -24,5 +24,5 @@ app.use('/api/v1/contact', contactRoutes)
 const server = createServer(app)
 
 server.listen(port, () => {
-  console.log(`Server is running on port ${port}`)
+  console.log(`rodando papai ${port}`)
 })
