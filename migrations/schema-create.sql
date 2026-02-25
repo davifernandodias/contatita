@@ -14,3 +14,25 @@ CREATE TABLE "Telefone" (
     CONSTRAINT "pk_phones" PRIMARY KEY ("IDCONTATO", "ID"),
     CONSTRAINT "fk_phones_contact" FOREIGN KEY ("IDCONTATO") REFERENCES "Contato"("ID")
 );
+
+INSERT INTO "Contato" ("ID", "NOME", "IDADE")
+VALUES
+    (1, 'Davi Dias', 25),
+    (2, 'Lucas Silva', 30),
+    (3, 'Mariana Souza', 22),
+    (4, 'Fernanda Lima', 28)
+ON CONFLICT ("ID")
+DO UPDATE SET
+    "NOME" = EXCLUDED."NOME",
+    "IDADE" = EXCLUDED."IDADE";
+
+INSERT INTO "Telefone" ("IDCONTATO", "ID", "NUMERO")
+VALUES
+    (1, 1, '+551699999111'),
+    (1, 2, '+551198888777'),
+    (2, 1, '+552155554444'),
+    (3, 1, '+551242234322'),
+    (4, 1, '+552012345678')
+ON CONFLICT ("IDCONTATO", "ID")
+DO UPDATE SET
+    "NUMERO" = EXCLUDED."NUMERO";
