@@ -1,14 +1,52 @@
 services:
-  banco_postgres_processo_seletivo:
-    image: postgres:latest
-    environment:
-      POSTGRES_USER: contatita_user
-      POSTGRES_PASSWORD: senhamuitoforte123
-      POSTGRES_DB: contatita_database
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+    banco_postgres_processo_seletivo:
+        image: postgres:17
+        container_name: postgres_processo
+        restart: always
+        environment:
+            POSTGRES_USER: contatita_user
+            POSTGRES_PASSWORD: senhamuitoforte123
+            POSTGRES_DB: contatita_database
+        ports:
+            - "5432:5432"
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+        healthcheck:
+            test:
+                [
+                    "CMD-SHELL",
+                    "pg_isready -U contatita_user -d contatita_database",
+                ]
+            interval: 5s
+            timeout: 5s
+            retries: 5
+
+    backend:
+        build:
+            context: ./backend
+            dockerfile: devops/docker/Dockerfile
+        container_name: backend_processo
+        restart: always
+        ports:
+            - "8080:8080"
+        environment:
+            API_PORT: 8080
+            DATABASE_URL: postgresql://contatita_user:senhamuitoforte123@banco_postgres_processo_seletivo:5432/contatita_database
+            URL_FRONTEND: http://localhost:3000
+        depends_on:
+            banco_postgres_processo_seletivo:
+                condition: service_healthy
+
+    frontend:
+        build:
+            context: ./frontend
+            dockerfile: devops/docker/Dockerfile
+        container_name: frontend_processo
+        restart: always
+        ports:
+            - "3000:80"
+        depends_on:
+            - backend
 
 volumes:
-  postgres_data:
+    postgres_data:

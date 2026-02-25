@@ -1,13 +1,38 @@
-CREATE TABLE contacts (
-    id NUMERIC(14) PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    age NUMERIC(3)
+DROP TABLE IF EXISTS "Telefone" CASCADE;
+DROP TABLE IF EXISTS "Contato" CASCADE;
+
+CREATE TABLE "Contato" (
+    "ID" NUMERIC(14) PRIMARY KEY,
+    "NOME" VARCHAR(100),
+    "IDADE" NUMERIC(3)
 );
 
-CREATE TABLE phones (
-    contact_id NUMERIC(14) NOT NULL,
-    id NUMERIC(14) NOT NULL,
-    number VARCHAR(16) NOT NULL,
-    CONSTRAINT pk_phones PRIMARY KEY (contact_id, id),
-    CONSTRAINT fk_phones_contact FOREIGN KEY (contact_id) REFERENCES contacts(id)
+CREATE TABLE "Telefone" (
+    "IDCONTATO" NUMERIC(14),
+    "ID" NUMERIC(14),
+    "NUMERO" VARCHAR(16),
+    CONSTRAINT "pk_phones" PRIMARY KEY ("IDCONTATO", "ID"),
+    CONSTRAINT "fk_phones_contact" FOREIGN KEY ("IDCONTATO") REFERENCES "Contato"("ID")
 );
+
+INSERT INTO "Contato" ("ID", "NOME", "IDADE")
+VALUES
+    (1, 'Davi Dias', 25),
+    (2, 'Lucas Silva', 30),
+    (3, 'Mariana Souza', 22),
+    (4, 'Fernanda Lima', 28)
+ON CONFLICT ("ID")
+DO UPDATE SET
+    "NOME" = EXCLUDED."NOME",
+    "IDADE" = EXCLUDED."IDADE";
+
+INSERT INTO "Telefone" ("IDCONTATO", "ID", "NUMERO")
+VALUES
+    (1, 1, '+551699999111'),
+    (1, 2, '+551198888777'),
+    (2, 1, '+552155554444'),
+    (3, 1, '+551242234322'),
+    (4, 1, '+552012345678')
+ON CONFLICT ("IDCONTATO", "ID")
+DO UPDATE SET
+    "NUMERO" = EXCLUDED."NUMERO";

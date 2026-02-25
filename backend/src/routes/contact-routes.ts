@@ -14,6 +14,6 @@ router.put('/update/:id', updateContact)
 
 router.delete('/delete/:id', deleteContact)
 
-router.get('/search/:params', searchContacts)
+router.get('/search', searchContacts)
 
 export default router

@@ -1,22 +1,29 @@
 import { useForm, useFieldArray, Controller } from 'react-hook-form'
-import type { ContactFormData } from '../types/contact-form-data'
-import { DiamondPlus, Trash2, Save } from 'lucide-react'
+import { DiamondPlus, Trash2, Save, LoaderCircle } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { PhoneInputField } from '@/components/phone-input-field'
-import { contactService } from '../services/contact-service'
+import { PhoneInputField } from '@/app/features/contact/components/phone-input-field'
+import { normalizePhone, validatePhones } from '@/utils/phone-validator'
+import { contactService } from '../../services/contact-service'
+import { useState } from 'react'
+import { ContactFormData } from '../../types/create-types'
+import { toast } from 'sonner'
 
 export function ContactForm() {
   const {
     register,
     handleSubmit,
     formState: { errors },
-    control
+    control,
+    setError,
+    clearErrors
   } = useForm<ContactFormData>({
     defaultValues: { name: '', age: 0, phone: [{ numero: '' }] }
   })
+
+  const [isLoading, setLoading] = useState(false)
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -24,19 +31,40 @@ export function ContactForm() {
   })
 
   const onSubmit = async (data: ContactFormData) => {
-    debugger
-    const response = await contactService.register({
-      name: data.name,
-      age: data.age,
-      phones: data.phone
-    })
+    try {
+      setLoading(true)
+      const phoneValidation = validatePhones(data.phone)
 
-    // Verifica se não retornou um erro "esperado"
-    if (response && response.action_code !== 1) {
-      alert('Atenção. ocorreu um erro: ' + response.message)
+      if (phoneValidation !== true) {
+        setError(`phone.${phoneValidation.index}.numero`, {
+          type: 'manual',
+          message: phoneValidation.message
+        })
+        return
+      }
+
+      clearErrors('phone')
+
+      const response = await contactService.register({
+        name: data.name,
+        age: Number(data.age),
+        phones: data.phone
+          .filter((p) => p.numero.trim() !== '')
+          .map((p) => ({
+            numero: normalizePhone(p.numero) as string
+          }))
+      })
+
+      if (response && response.action_code !== 1) {
+        toast.error('Atenção. ocorreu um erro: ' + response.message)
+        return
+      }
+      toast.success(response.message)
+    } catch (error) {
+      console.error('error para criar contato: ', error)
+    } finally {
+      setLoading(false)
     }
-
-    alert(response.message)
   }
 
   return (
@@ -46,6 +74,7 @@ export function ContactForm() {
         <Input
           id="name"
           type="text"
+          maxLength={100}
           placeholder="Digite o nome completo"
           {...register('name', {
             required: 'Nome é obrigatório',
@@ -68,7 +97,10 @@ export function ContactForm() {
           placeholder="Digite a idade"
           {...register('age', {
             required: 'Idade é obrigatória',
-            valueAsNumber: true,
+            pattern: {
+              value: /^[1-9]\d*$/,
+              message: 'Idade não pode começar com 0'
+            },
             min: { value: 1, message: 'Idade deve ser maior que 0' },
             max: { value: 150, message: 'Idade deve ser menor que 150' },
             validate: (value) => !isNaN(value) || 'Idade inválida'
@@ -105,16 +137,23 @@ export function ContactForm() {
               transition={{ duration: 0.2, ease: 'easeInOut' }}
               className="overflow-hidden"
             >
-              <div className="flex items-center gap-2">
+              <div className="flex items-start gap-2">
                 <Controller
                   control={control}
                   name={`phone.${index}.numero`}
                   render={({ field: controllerField }) => (
-                    <PhoneInputField
-                      value={controllerField.value}
-                      onChange={controllerField.onChange}
-                      placeholder={`Telefone ${index + 1}`}
-                    />
+                    <div className="flex flex-col gap-1 flex-1">
+                      <PhoneInputField
+                        value={controllerField.value}
+                        onChange={controllerField.onChange}
+                        placeholder={`Telefone ${index + 1}`}
+                      />
+                      {errors.phone?.[index]?.numero && (
+                        <p className="text-sm text-destructive">
+                          {errors.phone[index].numero.message}
+                        </p>
+                      )}
+                    </div>
                   )}
                 />
                 {fields.length > 1 && (
@@ -123,7 +162,7 @@ export function ContactForm() {
                     variant="ghost"
                     size="icon"
                     onClick={() => remove(index)}
-                    className="shrink-0 text-muted-foreground hover:text-destructive cursor-pointer"
+                    className="shrink-0 text-muted-foreground hover:text-destructive cursor-pointer mt-0.5"
                   >
                     <Trash2 className="size-4" />
                     <span className="sr-only">
@@ -139,7 +178,14 @@ export function ContactForm() {
 
       <Button type="submit" className="mt-2 w-full gap-2 cursor-pointer">
         <Save className="size-4" />
-        Salvar Contato
+        {isLoading ? (
+          <>
+            <LoaderCircle className="animate-spin" />
+            Cadastrando...
+          </>
+        ) : (
+          <>Cadastrar Contato</>
+        )}
       </Button>
     </form>
   )

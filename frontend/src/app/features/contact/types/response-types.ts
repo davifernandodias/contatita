@@ -6,3 +6,13 @@ export interface ContactResponse {
   errors: boolean | string
   action_code: number
 }
+
+export interface PhoneSearchResponse {
+  id: number
+  phone: string
+}
+
+export interface ContactUpdateReponse {
+  message: string
+  action_code: number
+}
