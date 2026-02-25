@@ -4,8 +4,8 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { UserPlus, Search } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { ContactForm } from '@/app/features/contact/components/contact-create-form'
-import { ContactFormSearch } from '@/app/features/contact/components/contact-search-form'
+import { ContactForm } from '@/app/features/contact/components/create/contact-create-form'
+import { ContactFormSearch } from '@/app/features/contact/components/search/contact-search-form'
 
 const tabs = [
   { id: 'cadastro', label: 'Cadastro de Contato', icon: UserPlus },
