@@ -12,7 +12,7 @@
 
  2) Tenha o Docker instalado e execute no terminal bash:
  ```bash
- prepare-environment
+ make prepare-environment
  ```
  > Funciona melhor em ambiente Linux.
 
